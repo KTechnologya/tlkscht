@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat com IA 🤖</title>
+    <title>BlackBox AI Chat</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,40 +11,37 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f5f5f5;
+            background-color: #f4f4f4;
         }
         .chat-container {
             width: 400px;
             background: white;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .chat-box {
+        #chat-box {
             height: 300px;
             overflow-y: auto;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             padding: 10px;
             margin-bottom: 10px;
+            background: #fafafa;
         }
-        .message {
-            padding: 5px;
-            margin: 5px 0;
-            border-radius: 5px;
-        }
-        .user {
-            background: #007bff;
-            color: white;
+        .user-message {
             text-align: right;
+            color: blue;
+            font-weight: bold;
         }
-        .ai {
-            background: #e0e0e0;
+        .bot-message {
+            text-align: left;
+            color: green;
+            font-weight: bold;
         }
         input {
             width: 80%;
             padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 5px;
         }
         button {
@@ -52,60 +49,52 @@
             background: #007bff;
             color: white;
             border: none;
-            cursor: pointer;
             border-radius: 5px;
-        }
-        button:hover {
-            background: #0056b3;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <h2>Chat com IA 🤖</h2>
-        <div class="chat-box" id="chat-box"></div>
-        <input type="text" id="user-input" placeholder="Digite sua mensagem...">
-        <button onclick="sendMessage()">Enviar</button>
-    </div>
-    <script>
-        async function sendMessage() {
-            const inputField = document.getElementById("user-input");
-            const message = inputField.value.trim();
-            if (!message) return;
 
-            appendMessage("user", message);
-            inputField.value = "";
+<div class="chat-container">
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Digite sua mensagem...">
+    <button onclick="sendMessage()">Enviar</button>
+</div>
 
-            try {
-                const response = await fetch("https://api.blackbox.ai/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        messages: [{ content: message, role: "user" }],
-                        model: "deepseek-ai/DeepSeek-V3",
-                        max_tokens: "1024"
-                    })
-                });
+<script>
+    async function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+        if (!userInput) return;
+        
+        // Adiciona mensagem do usuário na tela
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML += `<div class="user-message">Você: ${userInput}</div>`;
+        
+        // Faz requisição para a API
+        const response = await fetch('https://api.blackbox.ai/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                messages: [{ content: userInput, role: 'user' }],
+                model: 'deepseek-ai/DeepSeek-V3',
+                max_tokens: '1024'
+            })
+        });
 
-                const data = await response.json();
-                if (data && data.choices && data.choices[0] && data.choices[0].message) {
-                    appendMessage("ai", data.choices[0].message.content);
-                } else {
-                    appendMessage("ai", "Erro ao obter resposta da IA.");
-                }
-            } catch (error) {
-                appendMessage("ai", "Erro de conexão com a API.");
-            }
-        }
+        const data = await response.json();
+        const botResponse = data.choices?.[0]?.message?.content || "Erro na resposta";
 
-        function appendMessage(role, text) {
-            const chatBox = document.getElementById("chat-box");
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message", role);
-            messageDiv.textContent = text;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    </script>
+        // Adiciona resposta do bot
+        chatBox.innerHTML += `<div class="bot-message">Bot: ${botResponse}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Limpa o input
+        document.getElementById('user-input').value = '';
+    }
+</script>
+
 </body>
 </html>
