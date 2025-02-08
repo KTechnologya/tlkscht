@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PackReign | O Rei dos Packs</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Cloudinary Video Player -->
+    <script src="https://unpkg.com/cloudinary-video-player@1.9.1/dist/cld-video-player.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/cloudinary-video-player@1.9.1/dist/cld-video-player.min.css">
+
+    <!-- AOS (Animações ao Scroll) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"/>
+
+    <!-- FontAwesome (Ícones) -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        .parallax {
+            background-image: url('https://source.unsplash.com/1600x900/?luxury,black');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    
+    <!-- Cabeçalho -->
+    <header class="parallax text-center py-20 relative">
+        <img src="https://cdn-icons-png.flaticon.com/512/4880/4880410.png" class="w-20 mx-auto mb-4 animate-bounce" alt="Coroa PackReign">
+        <h1 class="text-4xl font-bold opacity-0" id="title">PackReign | O Rei dos Packs</h1>
+    </header>
+
+    <!-- Barra de Pesquisa -->
+    <section class="p-6 text-center">
+        <input type="text" id="search" onkeyup="filtrarPacks()" placeholder="🔍  O que você procura, eu tenho!" class="w-full md:w-1/2 p-3 text-gray-900 rounded-md">
+    </section>
+
+    <!-- Lista de Packs -->
+    <section class="p-8 text-center">
+        <h2 class="text-3xl font-semibold mb-6" data-aos="fade-up">📦 Todos os Packs</h2>
+        <div id="packs-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <script>
+                const packs = [
+                    { name: "Pack Premium", video: "Screen_Recording_20250207_212626_Canva_c6cgmk", price: "49,90" },
+                    { name: "Pack Gold", video: "sample_video_1", price: "59,90" },
+                    { name: "Pack Deluxe", video: "sample_video_2", price: "69,90" },
+                    { name: "Pack Supreme", video: "sample_video_3", price: "79,90" },
+                    { name: "Pack Ultimate", video: "sample_video_4", price: "89,90" },
+                    { name: "Pack Exclusive", video: "sample_video_5", price: "99,90" }
+                ];
+
+                packs.forEach(pack => {
+                    document.write(`
+                        <div class="pack bg-gray-800 p-6 rounded-lg shadow-lg" data-name="${pack.name}">
+                            <video class="w-full rounded-lg" controls autoplay loop>
+                                <source src="https://res.cloudinary.com/dbfwbvgdy/video/upload/v1738974686/${pack.video}.mp4" type="video/mp4">
+                            </video>
+                            <h3 class="text-xl font-semibold mt-3">${pack.name}</h3>
+                            <p class="text-gray-400">Conteúdo exclusivo e raro.</p>
+                            <p class="text-green-400 font-bold mt-2">R$ ${pack.price}</p>
+                            <a href="https://wa.me/seu_numero?text=Quero%20comprar%20o%20${pack.name}" target="_blank" class="mt-4 bg-purple-600 px-4 py-2 rounded-md hover:bg-purple-700 inline-block">Comprar</a>
+                        </div>
+                    `);
+                });
+            </script>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-900 text-center py-6">
+        <p class="text-gray-500">&copy; 2025 PackReign. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        AOS.init();
+        gsap.to("#title", { opacity: 1, y: -20, duration: 1.5, ease: "power2.out" });
+
+        function filtrarPacks() {
+            const input = document.getElementById("search").value.toLowerCase();
+            const packs = document.querySelectorAll(".pack");
+            
+            packs.forEach(pack => {
+                const name = pack.getAttribute("data-name").toLowerCase();
+                if (name.includes(input)) {
+                    pack.style.display = "block";
+                } else {
+                    pack.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
